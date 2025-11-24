@@ -28,6 +28,9 @@ public class Account implements Serializable {
         return accountNumber;
     }
 
+    public List getMiniStatement(){
+        return miniStatement;
+    }
     public String getCustomerName() {
         return customerName;
     }
@@ -41,6 +44,34 @@ public class Account implements Serializable {
     }
 
     public synchronized void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            miniStatement.add("Deposited: +Rs" + amount + " | Balance: ₹" + balance);
+            if (miniStatement.size() > 5) {
+                miniStatement.remove(0);
+            }
+            System.out.println("Deposit successful! New balance: ₹" + balance);
+        } else {
+            System.out.println("Invalid amount! Must be greater than 0");
+        }
+    }
+
+    public synchronized void withdraw(double amount){
+        if(amount>0 && balance>amount){
+            balance-=amount;
+            miniStatement.add("Withdraw: -Rs"+amount+" | Balance : Rs"+ balance);
+            if(miniStatement.size()>5){
+                miniStatement.remove(0);
+            }
+            System.out.println("WithDraw Sucessfull! New Balance : Rs"+balance);
+        }
+        else{
+            System.out.println("Insufficient amount! pls enter a within the range of amount");
+        }
+
+    }
+
+    public synchronized void Transfer(Account self, Account frndacc,double amount) {
         if (amount > 0) {
             balance += amount;
             miniStatement.add("Deposited: +₹" + amount + " | Balance: ₹" + balance);
