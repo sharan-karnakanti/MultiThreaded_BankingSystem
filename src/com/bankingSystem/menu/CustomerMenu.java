@@ -46,7 +46,7 @@ public class CustomerMenu {
                     break;
 
                 case 6:
-                    System.out.println("Feature Comming Soon...");
+                    AtmSimulation.AtmDemo(user, sc);
                     break;
 
                 case 7:
@@ -61,9 +61,9 @@ public class CustomerMenu {
 
     public static void showMiniStatement(Account user, Scanner sc) {
         System.out.println("\n=====================================");
-        System.out.println("     MINI STATEMENT");
-        System.out.println("     " + user.getCustomerName().toUpperCase());
-        System.out.println("     Acc No: " + user.getAccountNumber());
+        System.out.println("     MINI STATEMENT     " + user.getCustomerName().toUpperCase()+"     Acc No: " + user.getAccountNumber());
+        // System.out.println(" " );
+        // System.out.println("     Acc No: " + user.getAccountNumber());
         System.out.println("=====================================");
 
         List<String> stmt = user.getMiniStatement();
@@ -73,14 +73,15 @@ public class CustomerMenu {
         } else {
             System.out.println("     Recent Transactions:");
             for (int i = stmt.size() - 1; i >= 0; i--) {
-                System.out.println("     • " + stmt.get(i));
+                System.out.println("     Rs " + stmt.get(i));
             }
             System.out.println();
         }
 
-        System.out.println("     Current Balance: ₹" + String.format("%.2f", user.getBalance()));
+        System.out.println("     Current Balance: Rs" + String.format("%.2f", user.getBalance()));
         System.out.println("=====================================\n");
         System.out.print("Press Enter to continue...");
+        sc.nextLine();
         sc.nextLine();
     }
 
@@ -117,7 +118,6 @@ public class CustomerMenu {
             while (true) {
                 System.out.println("Enter account Number to Transfer Money: ");
                 toAccNo = sc.next();
-                ;
                 for (Account acc : Database.accounts.values()) {
                     if (acc.getAccountNumber().equals(toAccNo)) {
                         toAcc = acc;
@@ -126,6 +126,8 @@ public class CustomerMenu {
                 }
                 if (toAcc == null) {
                     System.out.println("Invalid User Account Num, plz check and enter again");
+                } else {
+                    break;
                 }
             }
         } catch (Exception e) {
@@ -151,12 +153,13 @@ public class CustomerMenu {
                     second = fromUser;
                 }
 
-                // NOW LOCK IN ORDER — ALWAYS!
                 synchronized (first) {
                     synchronized (second) {
                         // NOW 100% SAFE — no one can interrupt!
-                        fromUser.withdraw(amount); // deducts safely
-                        toAcc.deposit(amount); // adds safely
+                        fromUser.transferOut(toAcc, amount);
+
+                        // Receiver uses transferIn → shows "Received from..."
+                        toAcc.transferIn(fromUser, amount); // adds safely
                     }
                 }
             }

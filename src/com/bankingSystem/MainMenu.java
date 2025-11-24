@@ -3,6 +3,7 @@ package com.bankingSystem;
 import java.util.Scanner;
 
 import com.bankingSystem.model.Account;
+import com.bankingSystem.menu.AdminMenu;
 import com.bankingSystem.menu.CustomerMenu;
 
 public class MainMenu {
@@ -11,6 +12,8 @@ public class MainMenu {
         Database.loadAccounts();
 
         while (true) {
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
             System.out.println("=======================================");
             System.out.println("     SECURETHREAD BANKING SYSTEM       ");
             System.out.println("=======================================");
@@ -26,7 +29,6 @@ public class MainMenu {
                     choice = sc.nextInt();
                     System.out.print("\033[H\033[2J");
                     System.out.flush();
-
                     break;
                 }
             } catch (Exception e) {
@@ -99,44 +101,53 @@ public class MainMenu {
 
     public static void customerLogin(Scanner sc) {
         sc.nextLine();
-        System.out.println("\n=== CUSTOMER LOGIN ===");
-        System.out.print("Enter your registered email: ");
+
+        System.out.println("\n" + "=".repeat(40));
+        System.out.println("       SECURETHREAD BANK - LOGIN");
+        System.out.println("=".repeat(40));
+
+        System.out.print("Enter your Email: ");
         String email = sc.nextLine().trim();
+
         Account user = null;
         for (Account acc : Database.accounts.values()) {
-            if (acc.getEmail().equals(email)) {
+            if (acc.getEmail().equalsIgnoreCase(email)) {
                 user = acc;
                 break;
             }
         }
 
         if (user == null) {
-            System.out.println("User not found, maybe wrong email! check once and type correct email");
+            System.out.println("Account not found!");
             return;
         }
 
-        int otp = (int) (Math.random() * 90000) + 10000;
-        System.out.println("OTP sent to your email: " + otp);
-        for (int times = 1; times <= 3; times++) {
-            System.out.print("Enter 6 digits otp: ");
-            int enteredOTp = sc.nextInt();
-            if (enteredOTp == otp) {
-                System.out.println("Login Sucessfull!");
-                System.out.println("Welcome " + user.getCustomerName());
+        System.out.println("Welcome back, " + user.getCustomerName() + "!");
+        System.out.println("Account No: " + user.getAccountNumber());
+
+        for (int attempt = 1; attempt <= 3; attempt++) {
+            System.out.print("Enter 4-digit PIN: ");
+            String enteredPin = sc.next();
+
+            if (enteredPin.equals(user.getPin())) {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+                System.out.println("LOGIN SUCCESSFUL!");
+                System.out.println("Welcome to your account");
                 CustomerMenu.showCustomerMenu(user, sc);
-                break;
+                return;
             } else {
-                System.out.println("Wrongg otp! Attempts left " + (3 - times));
-                if (times == 3) {
-                    System.out.println("Too many Atte,pts! login failed");
-                    return;
+                System.out.println("Wrong PIN! Attempts left: " + (3 - attempt));
+                if (attempt == 3) {
+                    System.out.println("Too many wrong attempts. Access Blocked.");
+                    System.out.println("Contact Admin to reset PIN.");
                 }
             }
         }
     }
 
     public static void adminLogin(Scanner sc) {
-
+        AdminMenu.showAdminPanel(sc);
     }
 
 }
