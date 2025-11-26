@@ -7,12 +7,21 @@ import java.io.*;
 
 public class Database {
     public static HashMap<String, Account> accounts = new HashMap<>();
-    private static int nextAccountNumber = 10001;
 
     public static String generateAccountNumber() {
-        String accNo = String.valueOf(nextAccountNumber++);
-        return accNo;
+    if (accounts.isEmpty()) {
+        return "10001";
     }
+
+    int max = 0;
+    for (String accNo : accounts.keySet()) {
+        int num = Integer.parseInt(accNo);
+        if (num > max) {
+            max = num;
+        }
+    }
+    return String.valueOf(max + 1);
+}
 
     public static void loadAccounts() {
         try {
