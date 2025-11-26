@@ -7,6 +7,12 @@ import java.io.*;
 
 public class Database {
     public static HashMap<String, Account> accounts = new HashMap<>();
+    private static int nextAccountNumber = 10001;
+
+    public static String generateAccountNumber() {
+        String accNo = String.valueOf(nextAccountNumber++);
+        return accNo;
+    }
 
     public static void loadAccounts() {
         try {
@@ -22,21 +28,20 @@ public class Database {
     }
 
     public static void saveAccounts() {
-        try{
+        try {
             FileOutputStream fos = new FileOutputStream("accounts.ser");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(accounts);
             oos.close();
             fos.close();
             System.out.println("Data saved sucessfully!!!");
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
     public static Account getAccount(String accNo) {
-            return accounts.get(accNo);
+        return accounts.get(accNo);
     }
 
 }

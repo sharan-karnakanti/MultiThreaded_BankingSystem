@@ -87,7 +87,7 @@ public class MainMenu {
             }
             System.out.println("PINs don't match or not 4 digits! Try again.");
         }
-        String accNo = String.format("%05d", Database.accounts.size() + 10001);
+        String accNo = Database.generateAccountNumber();
         Account a1 = new Account(accNo, name, email, initialBalance, pin);
         Database.accounts.put(accNo, a1);
 

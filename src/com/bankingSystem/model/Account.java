@@ -12,9 +12,6 @@ public class Account implements Serializable {
     private double balance;
     private String pin;
     private List<String> miniStatement = new ArrayList<>();
-    private int otpAttempts;
-    private boolean isLocked;
-    private long lockTime;
 
     public Account(String accountNumber, String Name, String email, double initialBalance, String pin) {
         this.accountNumber = accountNumber;
@@ -32,9 +29,10 @@ public class Account implements Serializable {
         return accountNumber;
     }
 
-    public String getPin(){
+    public String getPin() {
         return pin;
     }
+
     public List getMiniStatement() {
         return miniStatement;
     }
