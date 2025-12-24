@@ -77,7 +77,9 @@ accounts.ser (auto-generated after first run)
 
 ### Compile
 ```bash
-javac -d . src/com/bankingSystem/**/*.java
+javac -d . src/com/bankingSystem/*.java
+javac -d . src/com/bankingSystem/model/*.java
+javac -d . src/com/bankingSystem/menu/*.java
  To Run:
 java com.bankingSystem.MainMenu
 
